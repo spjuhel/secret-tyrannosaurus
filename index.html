@@ -1,23 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anniversary Surprise</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Joyeux Anniversaire</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #000;
+      color: #0F0;
+      font-family: monospace;
+      overflow: hidden;
+      text-align: center;
+    }
+    #passwordScreen, #finalScreen {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #passwordScreen input {
+      padding: 10px;
+      font-size: 16px;
+    }
+    #finalScreen {
+      display: none;
+      color: #fff;
+    }
+    #finalScreen h1 {
+      font-size: 4em;
+      margin-bottom: 20px;
+    }
+    /* Optional: style for dinosaur images */
+    .dinosaur {
+      width: 150px;
+      margin: 10px;
+    }
+  </style>
 </head>
 <body>
-    <div id="password-container">
-        <input type="password" id="password-input" placeholder="Enter password">
-        <button id="submit-button">Submit</button>
-    </div>
-    <div id="matrix-animation" class="hidden">
-        <!-- Matrix animation will be displayed here -->
-    </div>
-    <div id="final-display" class="hidden">
-        <h1>Joyeux Anniversaire</h1>
-        <img src="dinosaur.png" alt="Dinosaurs">
-    </div>
-    <script src="script.js"></script>
+
+  <!-- Password Entry Screen -->
+  <div id="passwordScreen">
+    <h2>Entrez le mot de passe</h2>
+    <input type="password" id="passwordInput" placeholder="Mot de passe">
+    <button onclick="checkPassword()">Valider</button>
+  </div>
+
+  <!-- Canvas for Matrix Animation -->
+  <canvas id="matrixCanvas"></canvas>
+
+  <!-- Final Screen -->
+  <div id="finalScreen">
+    <h1>Joyeux Anniversaire</h1>
+    <!-- Add dinosaur images (make sure these URLs are valid or use local images) -->
+    <img src="https://via.placeholder.com/150?text=Dino1" class="dinosaur" alt="Dinosaur">
+    <img src="https://via.placeholder.com/150?text=Dino2" class="dinosaur" alt="Dinosaur">
+    <img src="https://via.placeholder.com/150?text=Dino3" class="dinosaur" alt="Dinosaur">
+  </div>
+
+  <script>
+    const correctPassword = "votreMotDePasse"; // Change to your desired password
+
+    function checkPassword() {
+      const input = document.getElementById('passwordInput').value;
+      if (input === correctPassword) {
+        // Hide password screen and start animation
+        document.getElementById('passwordScreen').style.display = 'none';
+        startMatrixAnimation();
+      } else {
+        alert("Mot de passe incorrect!");
+      }
+    }
+
+    // Matrix animation variables
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%";
+    const fontSize = 16;
+    let columns, drops;
+
+    function initCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      columns = Math.floor(width / fontSize);
+      drops = Array(columns).fill(1);
+    }
+
+    function drawMatrix() {
+      // Fade the canvas slightly to create the trail effect
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.fillStyle = "#0F0";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    function startMatrixAnimation() {
+      initCanvas();
+      const animationInterval = setInterval(drawMatrix, 50);
+
+      // After a few seconds, stop the animation and display the final screen
+      setTimeout(() => {
+        clearInterval(animationInterval);
+        canvas.style.display = 'none';
+        document.getElementById('finalScreen').style.display = 'block';
+      }, 5000); // 5000ms = 5 seconds
+    }
+
+    // Resize canvas when window size changes
+    window.addEventListener('resize', initCanvas);
+  </script>
 </body>
 </html>
