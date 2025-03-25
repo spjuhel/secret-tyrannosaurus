@@ -15,11 +15,11 @@ function checkPassword() {
     		fadeCanvas(document.getElementById("dinoCanvas"), "in");
 				drawAsciiArt();
       }, 7000); // 5000ms = 5 seconds
-	canvas.addEventListener('click', (e) => {
+	document.getElementById("dinoCanvas").addEventListener('click', (e) => {
 	createFirework(e.clientX, e.clientY);
 });
 setInterval(() => {
-	createFirework(random(0, canvas.width), random(0, canvas.height / 2));
+	createFirework(random(0, document.getElementById("dinoCanvas").width), random(0, document.getElementById("dinoCanvas").height / 2));
 }, 1500);
 	
 	} else {
