@@ -1,6 +1,8 @@
 
 const correctPassword = "T-rex"; // Change to your desired password
 document.getElementById('matrixCanvas').style.display = 'none'
+const ffCanvas = document.getElementById('ffCanvas');
+const ctxFF = ffCanvas.getContext('2d');
 
 function checkPassword() {
 	const input = document.getElementById('passwordInput').value;
@@ -10,18 +12,17 @@ function checkPassword() {
 		document.getElementById('matrixCanvas').style.display = 'block';
 		setInterval(drawMatrix, 50);
 		setTimeout(() => {
-        fadeCanvas(document.getElementById("matrixCanvas"), "out");
+        			fadeCanvas(document.getElementById("matrixCanvas"), "out");
 				document.getElementById('finalScreen').style.display = 'block';
-    		fadeCanvas(document.getElementById("dinoCanvas"), "in");
+    				fadeCanvas(document.getElementById("dinoCanvas"), "in");
 				drawAsciiArt();
-      }, 7000); // 5000ms = 5 seconds
-	document.getElementById("dinoCanvas").addEventListener('click', (e) => {
-	createFirework(e.clientX, e.clientY);
-});
-setInterval(() => {
-	createFirework(random(0, document.getElementById("dinoCanvas").width), random(0, document.getElementById("dinoCanvas").height / 2));
-}, 1500);
-	
+      				}, 7000); // 5000ms = 5 seconds
+		ffCanvas.addEventListener('click', (e) => {
+				createFirework(e.clientX, e.clientY);
+				});
+		setInterval(() => {
+				createFirework(random(0, ffCanvas.width), random(0, ffCanvas.height / 2));
+		}, 1500);
 	} else {
 		alert("Mot de passe incorrect!");
 	}
@@ -35,8 +36,10 @@ const ctxMatrix = matrixCanvas.getContext('2d');
 function resizeCanvas() {
   matrixCanvas.width = window.innerWidth;
   matrixCanvas.height = window.innerHeight;
-	dinoCanvas.width = window.innerWidth;
+  dinoCanvas.width = window.innerWidth;
   dinoCanvas.height = window.innerHeight;
+  ffCanvas.width = window.innerWidth;
+  ffCanvas.height = window.innerHeight;
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
@@ -167,13 +170,13 @@ Particle.prototype.update = function() {
 };
 
 Particle.prototype.draw = function() {
-	ctxAscii.save();
-	ctxAscii.globalAlpha = this.alpha;
-	ctxAscii.beginPath();
-	ctxAscii.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-	ctxAscii.fillStyle = this.color;
-	ctxAscii.fill();
-	ctxAscii.restore();
+	ctxFF.save();
+	ctxFF.globalAlpha = this.alpha;
+	ctxFF.beginPath();
+	ctxFF.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+	ctxFF.fillStyle = this.color;
+	ctxFF.fill();
+	ctxFF.restore();
 };
 
 let particles = [];
@@ -191,8 +194,8 @@ function createFirework(x, y) {
 function animate() {
 	requestAnimationFrame(animate);
 	// Draw a semi-transparent black rectangle to create a trailing effect
-	ctxAscii.fillStyle = 'rgba(0, 0, 0, 0.1)';
-	ctxAscii.fillRect(0, 0, asciiCanvas.width, asciiCanvas.height);
+	ctxFF.fillStyle = 'rgba(0, 0, 0, 0.1)';
+	ctxFF.fillRect(0, 0, ffCanvas.width, ffCanvas.height);
 
 	for (let i = particles.length - 1; i >= 0; i--) {
 		const p = particles[i];
