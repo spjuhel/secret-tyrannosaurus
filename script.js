@@ -1,139 +1,135 @@
+
 const correctPassword = "T-rex"; // Change to your desired password
+document.getElementById('matrixCanvas').style.display = 'none'
 
 function checkPassword() {
-  const input = document.getElementById('passwordInput').value;
-  if (input === correctPassword) {
-    // Hide password screen and start animation
-    document.getElementById('passwordScreen').style.display = 'none';
-    startMatrixAnimation();
-  } else {
-    alert("Mot de passe incorrect!");
-  }
+	const input = document.getElementById('passwordInput').value;
+	if (input === correctPassword) {
+		// Hide password screen and start animation
+		document.getElementById('passwordScreen').style.display = 'none';
+		document.getElementById('matrixCanvas').style.display = 'block';
+		setInterval(drawMatrix, 50);
+		setTimeout(() => {
+        fadeCanvas(document.getElementById("matrixCanvas"), "out");
+				document.getElementById('finalScreen').style.display = 'block';
+    		fadeCanvas(document.getElementById("dinoCanvas"), "in");
+				drawAsciiArt();
+      }, 1000); // 5000ms = 5 seconds
+		
+	} else {
+		alert("Mot de passe incorrect!");
+	}
 }
 
 
-const canvas = document.getElementById("matrixCanvas");
-const ctx = canvas.getContext("2d");
+const matrixCanvas = document.getElementById('matrixCanvas');
+const ctxMatrix = matrixCanvas.getContext('2d');
 
 // Resize canvas to full window size
 function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  matrixCanvas.width = window.innerWidth;
+  matrixCanvas.height = window.innerHeight;
+	dinoCanvas.width = window.innerWidth;
+  dinoCanvas.height = window.innerHeight;
 }
+window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
 
-// Matrix rain variables
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%';
 const fontSize = 16;
-const columns = Math.floor(canvas.width / fontSize);
-const characters = "ABCDEFGHIJKLMNOPQRSTUVXZY01X#@!$%^&*()";
+const columns = Math.floor(matrixCanvas.width / fontSize);
 const drops = Array(columns).fill(0);
 
-// Define dinosaur ASCII art arrays (extracted from the referenced page)
-// You can add more pieces as desired.
-const dinosaurArts = [
+function drawMatrix() {
+  ctxMatrix.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctxMatrix.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+  ctxMatrix.fillStyle = '#0F0';
+  ctxMatrix.font = `${fontSize}px monospace`;
+
+  drops.forEach((y, index) => {
+    const text = letters.charAt(Math.floor(Math.random() * letters.length));
+    const x = index * fontSize;
+    ctxMatrix.fillText(text, x, y * fontSize);
+    if (y * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+      drops[index] = 0;
+    } else {
+      drops[index]++;
+    }
+  });
+}
+
+const asciiCanvas = document.getElementById('dinoCanvas');
+const ctxAscii = asciiCanvas.getContext('2d');
+resizeCanvas(); // Ensure the ASCII canvas matches the window size
+
+const asciiArt = [
   // T-Rex
   [
-    "                                              ____",
-    "  ___                                      .-~. /_\"-._",
-    "`-._~-.                                  / /_ \"~o\  :Y",
-    "     \  \                                / : \~x.  ` ')",
-    "      ]  Y                              /  |  Y< ~-.__j",
-    "     /   !                        _.--~T : l  l<  /.-~",
-    "    /   /                 ____.--~ .   ` l /~\ \<|Y",
-    "   /   /             .-~~\"        /| .    ',-~\ \L|",
-    "  /   /             /     .^   \ Y~Y \.^>/l_   \"--'",
-    " /   Y           .-\"(  .  l__  j_j l_/ /~_.-~    .",
-    "Y    l          /    \  )    ~~~.\" / `/\"~ / \.__/l_",
-    "|     \     _.-\"      ~-{__     l  :  l._Z~-.___.--~",
-    "|      ~---~           /   ~~\"---\_  ' __[>",
-    "l  .                _.^   ___     _>-y~",
-    " \  \     .      .-~   .-~   ~>--\"  /",
-    "  \  ~---\"            /     ./  _.-'",
-    "   \"-.,_____.,_  _.--~\     _.-~",
-    "               ~~     (   _}",
-    "                      `. ~(",
-    "                        )  \",
-    "                  /,`--'~\--'~\"
-  ],
-  // Brontosaurus (by PapaJ)
-  [
-    "     ,--.",
-    "    `.`_.`\\",
-    "         \\ \\",
-    "          \\ \\",
-    "           \\ \\",
-    "            \\ `-''^^^^^''-.",
-    "             \\             `-._",
-    "             >>   >  <  <__    ^'-----...,,_",
-    "           //__/`---'\\__\\\\`'\"\"\"\"'\"'\"\"'''''``",
-    "           `\"`\"\"      `\"\"`"
+    '                                              ____',
+    '  ___                                      .-~. /_"-._',
+    '`-._~-.                                  / /_ "~o  :Y',
+    "                                       / : ~x.  ` ')",
+    '      ]  Y                              /  |  Y< ~-.__j',
+    '     /   !                        _.--~T : l  l<  /.-~',
+    '    /   /                 ____.--~ .   ` l /~ <|Y',
+    '   /   /             .-~~"        /| .    \',-~ L|',
+    '  /   /             /     .^    Y~Y .^>/l_   "--\'',
+    ' /   Y           .-"(  .  l__  j_j l_/ /~_.-~    .',
+    'Y    l          /      )    ~~~." / `/"~ / .__/l_',
+    '|          _.-"      ~-{__     l  :  l._Z~-.___.--~',
+    '|      ~---~           /   ~~"---_  \' __[>',
+    'l  .                _.^   ___     _>-y~',
+    '        .      .-~   .-~   ~>--"  /',
+    '    ~---"            /     ./  _.-\'',
+    '   "-.,_____.,_  _.--~     _.-~',
+    '               ~~     (   _}',
+    '                      `. ~(',
+    '                        )  "',
+    "                  /,`--'~--'~\"",
   ]
 ];
 
-// Randomly choose one dinosaur ASCII art
-const selectedArt = dinosaurArts[Math.floor(Math.random() * dinosaurArts.length)];
+const selectedArt = asciiArt[Math.floor(Math.random() * asciiArt.length)];
 
-// Timing for the reveal of ASCII art (in milliseconds)
-const revealDelay = 15000; // Delay before starting the reveal (15 seconds)
-const revealDuration = 3000; // Duration for full reveal (3 seconds)
-const startTime = Date.now();
-
-function drawMatrix() {
-  // Create a translucent black background to fade the characters slowly
-  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Set matrix font style
-  ctx.fillStyle = "#0F0";
-  ctx.font = fontSize + "px monospace";
-
-  // Draw falling characters
-  for (let i = 0; i < drops.length; i++) {
-    const text = characters[Math.floor(Math.random() * characters.length)];
-    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-    // Reset drop if it goes off screen with a random chance
-    if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) {
-      drops[i] = 0;
-    }
-    drops[i]++;
-  }
-}
-
-// Draw the dinosaur ASCII art centered on the canvas
-function drawDinosaurArt(alpha) {
-  ctx.save();
-  ctx.globalAlpha = alpha;
-  // Use a larger font for the art for clarity
-  const artFontSize = 20;
-  ctx.font = artFontSize + "px monospace";
-  ctx.fillStyle = "#FFF";
-
-  // Calculate dimensions
+function drawAsciiArt() {
+  ctxAscii.clearRect(0, 0, asciiCanvas.width, asciiCanvas.height);
+  ctxAscii.fillStyle = '#FFF';
+	const artFontSize = 20;
+  ctxAscii.font = artFontSize + 'px monospace';
   const lineHeight = artFontSize * 1.2;
-  const artWidth = Math.max(...selectedArt.map(line => ctx.measureText(line).width));
-  const artHeight = selectedArt.length * lineHeight;
-  const startX = (canvas.width - artWidth) / 2;
-  const startY = (canvas.height - artHeight) / 2;
+	const artWidth = Math.max(...selectedArt.map(line => ctxAscii.measureText(line).width));
+	const artHeight = selectedArt.length * lineHeight;
+	const startX = (asciiCanvas.width - artWidth) / 2;
+	const startY = (asciiCanvas.height - artHeight) / 2;
 
-  // Draw each line of the ASCII art
-  selectedArt.forEach((line, index) => {
-    ctx.fillText(line, startX, startY + index * lineHeight);
-  });
-  ctx.restore();
+	// Draw each line of the ASCII art
+	selectedArt.forEach((line, index) => {
+		ctxAscii.fillText(line, startX, startY + index * lineHeight);
+	});
 }
 
-function animate() {
-  drawMatrix();
-  const elapsed = Date.now() - startTime;
+function fadeCanvas(canvas, type, duration = 2000) {
+  let opacity = type === "in" ? 0 : 1; // Start opacity
+  const interval = 50; // Interval for updates
+  const step = interval / duration;
 
-  // After the delay, start revealing the dinosaur art gradually
-  if (elapsed > revealDelay) {
-    const revealAlpha = Math.min((elapsed - revealDelay) / revealDuration, 1);
-    drawDinosaurArt(revealAlpha);
+  function fade() {
+    opacity += type === "in" ? step : -step; // Increase for "in", decrease for "out"
+
+    if (opacity >= 1) {
+      opacity = 1;
+      return;
+    }
+    if (opacity <= 0) {
+      opacity = 0;
+      canvas.style.display = "none"; // Hide when fully faded out
+      return;
+    }
+
+    canvas.style.opacity = opacity;
+    requestAnimationFrame(fade);
   }
-  requestAnimationFrame(animate);
-}
 
-animate();
+  if (type === "in") canvas.style.display = "block"; // Ensure it's visible before fading in
+  fade();
+}
