@@ -15,6 +15,12 @@ function checkPassword() {
     		fadeCanvas(document.getElementById("dinoCanvas"), "in");
 				drawAsciiArt();
       }, 7000); // 5000ms = 5 seconds
+	canvas.addEventListener('click', (e) => {
+	createFirework(e.clientX, e.clientY);
+});
+setInterval(() => {
+	createFirework(random(0, canvas.width), random(0, canvas.height / 2));
+}, 1500);
 		
 	} else {
 		alert("Mot de passe incorrect!");
@@ -133,3 +139,84 @@ function fadeCanvas(canvas, type, duration = 2000) {
   if (type === "in") canvas.style.display = "block"; // Ensure it's visible before fading in
   fade();
 }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+// Resize canvas to full window dimensions
+function resizeCanvas() {
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// Helper function for random numbers
+function random(min, max) {
+	return Math.random() * (max - min) + min;
+}
+
+// Particle constructor for a single firework particle
+function Particle(x, y, color) {
+	this.x = x;
+	this.y = y;
+	this.color = color;
+	this.radius = random(2, 4);
+	this.speed = random(2, 5);
+	this.angle = random(0, Math.PI * 2);
+	this.vx = Math.cos(this.angle) * this.speed;
+	this.vy = Math.sin(this.angle) * this.speed;
+	this.alpha = 1; // opacity for fading effect
+}
+
+Particle.prototype.update = function() {
+	this.x += this.vx;
+	this.y += this.vy;
+	this.alpha -= 0.02;
+	// Simulate gravity
+	this.vy += 0.05;
+};
+
+Particle.prototype.draw = function() {
+	ctx.save();
+	ctx.globalAlpha = this.alpha;
+	ctx.beginPath();
+	ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+	ctx.fillStyle = this.color;
+	ctx.fill();
+	ctx.restore();
+};
+
+let particles = [];
+
+// Function to create a firework explosion at (x, y)
+function createFirework(x, y) {
+	const colors = ['#ff0043', '#14fc56', '#1e90ff', '#fff700'];
+	const color = colors[Math.floor(Math.random() * colors.length)];
+	for (let i = 0; i < 100; i++) {
+		particles.push(new Particle(x, y, color));
+	}
+}
+
+// Animation loop
+function animate() {
+	requestAnimationFrame(animate);
+	// Draw a semi-transparent black rectangle to create a trailing effect
+	ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+	for (let i = particles.length - 1; i >= 0; i--) {
+		const p = particles[i];
+		p.update();
+		p.draw();
+		// Remove particles that are completely faded out
+		if (p.alpha <= 0) {
+			particles.splice(i, 1);
+		}
+	}
+}
+animate();
+
+// Create fireworks on mouse click
+
+// Create periodic fireworks at random positions in the top half of the canvas
