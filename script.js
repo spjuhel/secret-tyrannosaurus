@@ -14,7 +14,7 @@ function checkPassword() {
 				document.getElementById('finalScreen').style.display = 'block';
     		fadeCanvas(document.getElementById("dinoCanvas"), "in");
 				drawAsciiArt();
-      }, 1000); // 5000ms = 5 seconds
+      }, 7000); // 5000ms = 5 seconds
 		
 	} else {
 		alert("Mot de passe incorrect!");
