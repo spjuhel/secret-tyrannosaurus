@@ -3,44 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Joyeux Anniversaire</title>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #000;
-      color: #0F0;
-      font-family: monospace;
-      overflow: hidden;
-      text-align: center;
-    }
-    #passwordScreen, #finalScreen {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    #passwordScreen input {
-      padding: 10px;
-      font-size: 16px;
-    }
-    #finalScreen {
-      display: none;
-      color: #fff;
-    }
-    #finalScreen h1 {
-      font-size: 4em;
-      margin-bottom: 20px;
-    }
-    /* Optional: style for dinosaur images */
-    .dinosaur {
-      width: 150px;
-      margin: 10px;
-    }
-  </style>
 </head>
 <body>
-<script src="script.js"></script>
   <!-- Password Entry Screen -->
   <div id="passwordScreen">
     <h2>Entrez le mot de passe</h2>
@@ -49,8 +13,16 @@
   </div>
 
   <!-- Canvas for Matrix Animation -->
-  <canvas id="matrixCanvas"></canvas>
+  <canvas id="matrixCanvas" class="canvas-layer"></canvas>
 
   <!-- Final Screen -->
+  <div id="finalScreen">
+    <h1>Joyeux Anniversaire Margosaurusrex</h1>
+    <!-- Add dinosaur images (make sure these URLs are valid or use local images) -->
+		<canvas id="dinoCanvas" class="canvas-layer"></canvas>
+  </div>
+  
+  <script src="script.js"></script>
+  <!-- Password Entry Screen -->
 </body>
 </html>
