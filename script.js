@@ -15,13 +15,14 @@ function checkPassword() {
     		fadeCanvas(document.getElementById("dinoCanvas"), "in");
 				drawAsciiArt();
       }, 7000); // 5000ms = 5 seconds
+	animate();
 	canvas.addEventListener('click', (e) => {
 	createFirework(e.clientX, e.clientY);
 });
 setInterval(() => {
 	createFirework(random(0, canvas.width), random(0, canvas.height / 2));
 }, 1500);
-		
+	
 	} else {
 		alert("Mot de passe incorrect!");
 	}
@@ -140,17 +141,6 @@ function fadeCanvas(canvas, type, duration = 2000) {
   fade();
 }
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-
-// Resize canvas to full window dimensions
-function resizeCanvas() {
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
 // Helper function for random numbers
 function random(min, max) {
 	return Math.random() * (max - min) + min;
@@ -178,13 +168,13 @@ Particle.prototype.update = function() {
 };
 
 Particle.prototype.draw = function() {
-	ctx.save();
-	ctx.globalAlpha = this.alpha;
-	ctx.beginPath();
-	ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-	ctx.fillStyle = this.color;
-	ctx.fill();
-	ctx.restore();
+	ctxAscii.save();
+	ctxAscii.globalAlpha = this.alpha;
+	ctxAscii.beginPath();
+	ctxAscii.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+	ctxAscii.fillStyle = this.color;
+	ctxAscii.fill();
+	ctxAscii.restore();
 };
 
 let particles = [];
@@ -202,8 +192,8 @@ function createFirework(x, y) {
 function animate() {
 	requestAnimationFrame(animate);
 	// Draw a semi-transparent black rectangle to create a trailing effect
-	ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctxAscii.fillStyle = 'rgba(0, 0, 0, 0.1)';
+	ctxAscii.fillRect(0, 0, asciiCanvas.width, asciiCanvas.height);
 
 	for (let i = particles.length - 1; i >= 0; i--) {
 		const p = particles[i];
@@ -215,7 +205,6 @@ function animate() {
 		}
 	}
 }
-animate();
 
 // Create fireworks on mouse click
 
