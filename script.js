@@ -15,7 +15,6 @@ function checkPassword() {
     		fadeCanvas(document.getElementById("dinoCanvas"), "in");
 				drawAsciiArt();
       }, 7000); // 5000ms = 5 seconds
-	animate();
 	canvas.addEventListener('click', (e) => {
 	createFirework(e.clientX, e.clientY);
 });
@@ -205,6 +204,7 @@ function animate() {
 		}
 	}
 }
+animate();
 
 // Create fireworks on mouse click
 
